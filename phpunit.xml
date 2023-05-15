@@ -9,6 +9,10 @@
          beStrictAboutOutputDuringTests="true"
          failOnRisky="true"
          failOnWarning="true">
+    <php>
+        <ini name="assert.exception" value="1" />
+    </php>
+
     <testsuites>
         <testsuite name="default">
             <directory>test</directory>
