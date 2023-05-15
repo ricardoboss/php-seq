@@ -1,18 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace Ricardoboss\PhpSeq;
+namespace RicardoBoss\PhpSeq;
 
 use DateTimeImmutable;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
 use JsonSerializable;
 use Stringable;
 use Throwable;
 
+#[Immutable]
 readonly class SeqEvent implements JsonSerializable
 {
+	public const CLEF_DATE_FORMAT = "Y-m-d\TH:i:s.uP";
+
 	/**
 	 * @param DateTimeImmutable $timestamp The timestamp is required.
 	 * @param null|string $message A fully-rendered message describing the event.
@@ -56,7 +60,7 @@ readonly class SeqEvent implements JsonSerializable
 	public function jsonSerialize(): array
 	{
 		$data = [
-			"@t" => $this->timestamp->format("Y-m-d\TH:i:s.uP"),
+			"@t" => $this->timestamp->format(self::CLEF_DATE_FORMAT),
 		];
 
 		if ($this->message !== null) {

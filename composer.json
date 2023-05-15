@@ -1,6 +1,11 @@
 {
     "name": "ricardoboss/php-seq",
     "description": "Implements a PHP client for the Seq (by Datalust) HTTP ingestion API",
+    "keywords": [
+        "Seq",
+        "Datalust",
+        "logging"
+    ],
     "prefer-stable": true,
     "minimum-stability": "dev",
     "type": "library",
@@ -17,12 +22,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Ricardoboss\\PhpSeq\\": "src/"
+            "RicardoBoss\\PhpSeq\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ricardoboss\\PhpSeq\\": "test/"
+            "RicardoBoss\\PhpSeq\\": "test/"
         }
     }
 }

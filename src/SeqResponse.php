@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ricardoboss\PhpSeq;
+namespace RicardoBoss\PhpSeq;
 
 use JetBrains\PhpStorm\Pure;
 use JsonException;

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Ricardoboss\PhpSeq\Contract;
+namespace RicardoBoss\PhpSeq\Contract;
 
-use Ricardoboss\PhpSeq\SeqClientException;
-use Ricardoboss\PhpSeq\SeqEvent;
+use RicardoBoss\PhpSeq\SeqClientException;
+use RicardoBoss\PhpSeq\SeqEvent;
 
 interface SeqClient
 {

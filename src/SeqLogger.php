@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Ricardoboss\PhpSeq;
+namespace RicardoBoss\PhpSeq;
 
-use Ricardoboss\PhpSeq\Contract\SeqException;
+use RicardoBoss\PhpSeq\Contract\SeqException;
 
 class SeqLogger implements Contract\SeqLogger
 {
@@ -75,18 +75,6 @@ class SeqLogger implements Contract\SeqLogger
 		if ($this->shouldFlush()) {
 			$this->flush();
 		}
-	}
-
-	/**
-	 * @throws SeqClientException
-	 */
-	public function logImmediate(SeqEvent $event, SeqEvent ...$events): void
-	{
-		$immediateBuffer = [];
-
-		$this->addToBuffer([$event, ...$events], $immediateBuffer);
-
-		$this->client->sendEvents($immediateBuffer);
 	}
 
 	/**

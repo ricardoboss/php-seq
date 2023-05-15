@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Ricardoboss\PhpSeq;
+namespace RicardoBoss\PhpSeq;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
 /**
- * @covers \Ricardoboss\PhpSeq\SeqEvent
+ * @covers \RicardoBoss\PhpSeq\SeqEvent
  *
  * @internal
  */

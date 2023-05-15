@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ricardoboss\PhpSeq\Contract;
+namespace RicardoBoss\PhpSeq\Contract;
 
 use Throwable;
 

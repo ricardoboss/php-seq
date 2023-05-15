@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Ricardoboss\PhpSeq;
+namespace RicardoBoss\PhpSeq;
 
+use JetBrains\PhpStorm\Immutable;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -12,9 +13,13 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
+#[Immutable]
 class SeqHttpClient implements Contract\SeqClient
 {
 	public const CLEF_CONTENT_TYPE = "application/vnd.serilog.clef";
+	public const SEQ_APIKEY_HEADER_NAME = "X-Seq-ApiKey";
+
+	private readonly RequestInterface $preparedRequest;
 
 	public function __construct(
 		protected readonly SeqClientConfiguration $config,
@@ -23,6 +28,15 @@ class SeqHttpClient implements Contract\SeqClient
 		protected readonly StreamFactoryInterface $streamFactory,
 	)
 	{
+		$request = $this->requestFactory
+			->createRequest("POST", $this->config->endpoint)
+			->withHeader("Content-Type", self::CLEF_CONTENT_TYPE);
+
+		if ($this->config->apiKey !== null) {
+			$request = $request->withHeader(self::SEQ_APIKEY_HEADER_NAME, $this->config->apiKey);
+		}
+
+		$this->preparedRequest = $request;
 	}
 
 	/**
@@ -30,7 +44,7 @@ class SeqHttpClient implements Contract\SeqClient
 	 */
 	public function sendEvents(array &$events): void
 	{
-		$body = $this->collapseBuffer($events);
+		$body = $this->collapseEvents($events);
 		if ($body === "") {
 			return;
 		}
@@ -43,16 +57,16 @@ class SeqHttpClient implements Contract\SeqClient
 	/**
 	 * @throws SeqClientException
 	 */
-	protected function collapseBuffer(array &$buffer): string
+	protected function collapseEvents(array &$events): string
 	{
-		if (count($buffer) === 0) {
+		if (count($events) === 0) {
 			return "";
 		}
 
 		try {
 			$contents = "";
 
-			while ($event = array_shift($buffer)) {
+			while ($event = array_shift($events)) {
 				assert($event instanceof SeqEvent, "Event must be an instance of SeqEvent");
 
 				$contents .= json_encode($event, JSON_THROW_ON_ERROR) . "\n";
@@ -67,16 +81,8 @@ class SeqHttpClient implements Contract\SeqClient
 	protected function buildRequest(string $body): RequestInterface
 	{
 		$stream = $this->streamFactory->createStream($body);
-		$request = $this->requestFactory
-			->createRequest("POST", $this->config->endpoint)
-			->withHeader("Content-Type", self::CLEF_CONTENT_TYPE)
-			->withBody($stream);
 
-		if ($this->config->apiKey !== null) {
-			$request = $request->withHeader("X-Seq-ApiKey", $this->config->apiKey);
-		}
-
-		return $request;
+		return $this->preparedRequest->withBody($stream);
 	}
 
 	/**

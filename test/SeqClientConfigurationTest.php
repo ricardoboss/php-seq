@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Ricardoboss\PhpSeq;
+namespace RicardoBoss\PhpSeq;
 
 use AssertionError;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Ricardoboss\PhpSeq\SeqClientConfiguration
+ * @covers \RicardoBoss\PhpSeq\SeqClientConfiguration
  *
  * @internal
  */

@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Ricardoboss\PhpSeq;
+namespace RicardoBoss\PhpSeq;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Ricardoboss\PhpSeq\Contract\SeqClient;
+use RicardoBoss\PhpSeq\Contract\SeqClient;
 
 /**
- * @covers \Ricardoboss\PhpSeq\SeqLogger
- * @covers \Ricardoboss\PhpSeq\SeqEvent
- * @covers \Ricardoboss\PhpSeq\SeqLoggerConfiguration
+ * @covers \RicardoBoss\PhpSeq\SeqLogger
+ * @covers \RicardoBoss\PhpSeq\SeqEvent
+ * @covers \RicardoBoss\PhpSeq\SeqLoggerConfiguration
  *
  * @internal
  */
@@ -94,25 +94,6 @@ final class SeqLoggerTest extends TestCase
 		;
 
 		$logger->__destruct();
-
-		self::assertCount(1, $events);
-		self::assertSame($event, $events[0]);
-	}
-
-	public function testLogImmediate(): void
-	{
-		$config = new SeqLoggerConfiguration();
-		$client = Mockery::mock(SeqClient::class);
-		$event = SeqEvent::information("test");
-
-		$client
-			->expects('sendEvents')
-			->with(Mockery::capture($events))
-			->once()
-		;
-
-		$logger = new SeqLogger($config, $client);
-		$logger->logImmediate($event);
 
 		self::assertCount(1, $events);
 		self::assertSame($event, $events[0]);

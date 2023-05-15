@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ricardoboss\PhpSeq;
+namespace RicardoBoss\PhpSeq;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -13,9 +13,9 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * @covers \Ricardoboss\PhpSeq\SeqHttpClient
- * @covers \Ricardoboss\PhpSeq\SeqEvent
- * @covers \Ricardoboss\PhpSeq\SeqClientConfiguration
+ * @covers \RicardoBoss\PhpSeq\SeqHttpClient
+ * @covers \RicardoBoss\PhpSeq\SeqEvent
+ * @covers \RicardoBoss\PhpSeq\SeqClientConfiguration
  *
  * @internal
  */
