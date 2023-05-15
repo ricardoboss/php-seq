@@ -10,7 +10,7 @@
          failOnRisky="true"
          failOnWarning="true">
     <php>
-        <ini name="assertion.exception" value="1" />
+        <ini name="assert.exception" value="1" />
     </php>
 
     <testsuites>

@@ -13,6 +13,13 @@ use PHPUnit\Framework\TestCase;
  */
 final class SeqLoggerConfigurationTest extends TestCase
 {
+	public static function setUpBeforeClass(): void
+	{
+		parent::setUpBeforeClass();
+
+		ini_set("assert.exception", "1");
+	}
+
 	public function testThrowsForNegativeBacklogLimit(): void
 	{
 		$this->expectException(AssertionError::class);
