@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  seq:
+    image: datalust/seq:latest
+    environment:
+      ACCEPT_EULA: "Y"
+    ports:
+      - "5380:80"
+      - "5341:5341"
+    volumes:
+      - ./tmp/data:/data

@@ -4,10 +4,15 @@ declare(strict_types=1);
 namespace Ricardoboss\PhpSeq;
 
 use DateTimeImmutable;
+use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Pure;
+use JsonException;
 use JsonSerializable;
+use Stringable;
 use Throwable;
 
-readonly class SeqEvent implements JsonSerializable {
+readonly class SeqEvent implements JsonSerializable
+{
 	/**
 	 * @param DateTimeImmutable $timestamp The timestamp is required.
 	 * @param null|string $message A fully-rendered message describing the event.
@@ -17,6 +22,7 @@ readonly class SeqEvent implements JsonSerializable {
 	 * @param null|int $id An implementation specific event id; Seq requires a numeric value, if present.
 	 * @param null|iterable $renderings If <code>mt</code> includes tokens with programming-language-specific formatting, an array of pre-rendered values for each such token. May be omitted; if present, the count of renderings must match the count of formatted tokens exactly.
 	 */
+	#[Pure]
 	public function __construct(
 		public DateTimeImmutable $timestamp,
 		public ?string $message,
@@ -28,9 +34,29 @@ readonly class SeqEvent implements JsonSerializable {
 		public ?iterable $context,
 	) {}
 
-	public function jsonSerialize(): array {
+	#[Pure]
+	public function withAddedContext(?iterable $context): self
+	{
+		if ($context === null) {
+			return $this;
+		}
+
+		return new self($this->timestamp, $this->message, $this->messageTemplate, $this->level, $this->exception, $this->id, $this->renderings, [...($this->context ?? []), ...$context]);
+	}
+
+	#[ArrayShape([
+		'@t' => 'string',
+		'@m' => 'string',
+		'@mt' => 'string',
+		'@l' => 'string',
+		'@x' => 'string',
+		'@i' => 'int',
+		'@r' => 'array<string, string>',
+	])]
+	public function jsonSerialize(): array
+	{
 		$data = [
-			"@t" => $this->timestamp->format(DATE_ISO8601_EXPANDED)
+			"@t" => $this->timestamp->format("Y-m-d\TH:i:s.uP"),
 		];
 
 		if ($this->message !== null) {
@@ -46,7 +72,7 @@ readonly class SeqEvent implements JsonSerializable {
 		}
 
 		if ($this->exception !== null) {
-			$data["@x"] = $this->exception;
+			$data["@x"] = (string)$this->exception;
 		}
 
 		if ($this->id !== null) {
@@ -54,7 +80,10 @@ readonly class SeqEvent implements JsonSerializable {
 		}
 
 		if ($this->renderings !== null) {
-			$data["@r"] = iterator_to_array($this->renderings);
+			$renderings = iterator_to_array($this->renderings);
+			if (count($renderings) > 0) {
+				$data["@r"] = $renderings;
+			}
 		}
 
 		if ($this->context !== null) {
@@ -68,5 +97,60 @@ readonly class SeqEvent implements JsonSerializable {
 		}
 
 		return $data;
+	}
+
+	public static function now(string $message, ?string $level = null, ?Throwable $exception = null, ?array $context = null): self
+	{
+		$time = new DateTimeImmutable();
+		$renderings = $context === null ? null : array_map(self::renderValue(...), $context);
+
+		return new self($time, null, $message, $level, $exception, null, $renderings, $context);
+	}
+
+	/**
+	 * @param mixed $value The value to be rendered
+	 * @return string|int|float|bool|null The rendered value
+	 * @throws JsonException
+	 */
+	private static function renderValue(mixed $value): string|int|float|bool|null
+	{
+		return match (true) {
+			is_string($value),
+			is_numeric($value),
+			is_bool($value),
+			$value === null => $value,
+			$value instanceof Stringable => $value->__toString(),
+			default => json_encode($value, JSON_THROW_ON_ERROR),
+		};
+	}
+
+	public static function verbose(string $message, ?array $context = null): self
+	{
+		return self::now($message, "Verbose", null, $context);
+	}
+
+	public static function debug(string $message, ?array $context = null): self
+	{
+		return self::now($message, "Debug", null, $context);
+	}
+
+	public static function information(string $message, ?array $context = null): self
+	{
+		return self::now($message, "Information", null, $context);
+	}
+
+	public static function warning(string $message, ?array $context = null): self
+	{
+		return self::now($message, "Warning", null, $context);
+	}
+
+	public static function error(string $message, ?Throwable $exception = null, ?array $context = null): self
+	{
+		return self::now($message, "Error", $exception, $context);
+	}
+
+	public static function fatal(string $message, ?Throwable $exception = null, ?array $context = null): self
+	{
+		return self::now($message, "Fatal", $exception, $context);
 	}
 }
