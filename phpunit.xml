@@ -7,6 +7,7 @@
          requireCoverageMetadata="true"
          beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
+         failOnDeprecation="true"
          failOnRisky="true"
          failOnWarning="true">
     <php>
@@ -19,7 +20,7 @@
         </testsuite>
     </testsuites>
 
-    <source restrictDeprecations="true" restrictNotices="true" restrictWarnings="true">
+    <source>
         <include>
             <directory>src</directory>
         </include>

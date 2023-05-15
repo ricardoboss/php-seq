@@ -13,13 +13,6 @@ use PHPUnit\Framework\TestCase;
  */
 final class SeqClientConfigurationTest extends TestCase
 {
-	public static function setUpBeforeClass(): void
-	{
-		parent::setUpBeforeClass();
-
-		ini_set("assert.exception", "1");
-	}
-
 	public function testThrowsForEmptyEndpoint(): void
 	{
 		$this->expectException(AssertionError::class);
