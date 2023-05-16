@@ -34,10 +34,10 @@ $logger->log(SeqEvent::information("Hello from PHP!"));
 
 ## Contributing
 
-Contributions in all forms are welcome! I you are missing a specific feature or something isn't working as expected,
+Contributions in all forms are welcome! If you are missing a specific feature or something isn't working as expected,
 please create an issue on GitHub: [create issue].
 
-If you can, you are encoured to create a pull request. Please make sure you add tests for the functionality you
+If you can, you are encouraged to create a pull request. Please make sure you add tests for the functionality you
 add/change and make sure they pass.
 
 ## License
