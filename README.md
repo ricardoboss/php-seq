@@ -118,7 +118,7 @@ This makes it easy to catch any exception wrapped by this library.
 
 The aim for this library is to provide simple logging for Seq in PHP and stay compatible with current PHP and Seq versions.
 
-A possible addition for this library could use GELF instead of HTTP using the `sockets` extension, but this is not planned for now.
+A possible addition for this library could be to use GELF instead of HTTP using the `sockets` extension, but this is not planned for now.
 
 ## Contributing
 
