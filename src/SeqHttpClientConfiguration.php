@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RicardoBoss\PhpSeq;
 
-final readonly class SeqClientConfiguration {
+final readonly class SeqHttpClientConfiguration {
 	public function __construct(
 		public string $endpoint,
 		public ?string $apiKey = null,

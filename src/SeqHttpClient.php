@@ -22,7 +22,7 @@ class SeqHttpClient implements Contract\SeqClient
 	private readonly RequestInterface $preparedRequest;
 
 	public function __construct(
-		protected readonly SeqClientConfiguration $config,
+		protected readonly SeqHttpClientConfiguration $config,
 		protected readonly ClientInterface $client,
 		protected readonly RequestFactoryInterface $requestFactory,
 		protected readonly StreamFactoryInterface $streamFactory,

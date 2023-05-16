@@ -15,7 +15,7 @@ use Psr\Http\Message\StreamInterface;
 /**
  * @covers \RicardoBoss\PhpSeq\SeqHttpClient
  * @covers \RicardoBoss\PhpSeq\SeqEvent
- * @covers \RicardoBoss\PhpSeq\SeqClientConfiguration
+ * @covers \RicardoBoss\PhpSeq\SeqHttpClientConfiguration
  *
  * @internal
  */
@@ -27,7 +27,7 @@ final class SeqHttpClientTest extends TestCase
 		$token = "token";
 		$message = "test";
 
-		$config = new SeqClientConfiguration($endpoint, $token);
+		$config = new SeqHttpClientConfiguration($endpoint, $token);
 		$event = SeqEvent::info($message);
 		$events = [$event];
 

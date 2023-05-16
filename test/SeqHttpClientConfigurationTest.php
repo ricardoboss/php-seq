@@ -7,18 +7,18 @@ use AssertionError;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \RicardoBoss\PhpSeq\SeqClientConfiguration
+ * @covers \RicardoBoss\PhpSeq\SeqHttpClientConfiguration
  *
  * @internal
  */
-final class SeqClientConfigurationTest extends TestCase
+final class SeqHttpClientConfigurationTest extends TestCase
 {
 	public function testThrowsForEmptyEndpoint(): void
 	{
 		$this->expectException(AssertionError::class);
 		$this->expectExceptionMessage("endpoint must be non-empty");
 
-		new SeqClientConfiguration("");
+		new SeqHttpClientConfiguration("");
 	}
 
 	public function testThrowsForEmptyApiKey(): void
@@ -26,7 +26,7 @@ final class SeqClientConfigurationTest extends TestCase
 		$this->expectException(AssertionError::class);
 		$this->expectExceptionMessage("If an API key is given, it must be non-empty");
 
-		new SeqClientConfiguration("endpoint", "");
+		new SeqHttpClientConfiguration("endpoint", "");
 	}
 
 	public function testThrowsForNegativeMaxRetries(): void
@@ -34,6 +34,6 @@ final class SeqClientConfigurationTest extends TestCase
 		$this->expectException(AssertionError::class);
 		$this->expectExceptionMessage("maxRetries must be >= 0");
 
-		new SeqClientConfiguration("endpoint", maxRetries: -1);
+		new SeqHttpClientConfiguration("endpoint", maxRetries: -1);
 	}
 }
