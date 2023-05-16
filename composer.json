@@ -19,7 +19,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^10.1",
-        "mockery/mockery": "@stable"
+        "mockery/mockery": "@stable",
+        "guzzlehttp/guzzle": "*"
     },
     "autoload": {
         "psr-4": {
