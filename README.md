@@ -29,7 +29,9 @@ $loggerConfig = new SeqLoggerConfiguration();
 $logger = new SeqLogger($loggerConfig, $seqClient);
 
 // 3. start logging!
-$logger->send(SeqEvent::information("Hello from PHP!"));
+$logger->send(SeqEvent::info("Hello from PHP!"));
+// or
+$logger->log(\Psr\Log\LogLevel::INFO, "Hello via PSR-3!");
 ```
 
 ## Contributing
