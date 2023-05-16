@@ -38,6 +38,7 @@ $logger->flush();
 ```
 
 > **Note**
+>
 > All events get flushed automatically when the loggers `__destruct` method is called (i.e. at latest when the runtime shuts down).
 
 ## Configuration
