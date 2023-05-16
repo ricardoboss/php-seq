@@ -1,6 +1,7 @@
 {
     "name": "ricardoboss/php-seq",
     "description": "Implements a PHP client for the Seq (by Datalust) HTTP ingestion API",
+    "license": "MIT",
     "keywords": [
         "Seq",
         "Datalust",
