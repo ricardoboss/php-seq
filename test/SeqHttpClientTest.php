@@ -28,7 +28,7 @@ final class SeqHttpClientTest extends TestCase
 		$message = "test";
 
 		$config = new SeqClientConfiguration($endpoint, $token);
-		$event = SeqEvent::information($message);
+		$event = SeqEvent::info($message);
 		$events = [$event];
 
 		$httpClient = Mockery::mock(ClientInterface::class);

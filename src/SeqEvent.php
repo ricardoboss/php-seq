@@ -19,9 +19,9 @@ readonly class SeqEvent implements JsonSerializable
 
 	/**
 	 * @param DateTimeImmutable $timestamp The timestamp is required.
-	 * @param null|string $message A fully-rendered message describing the event.
-	 * @param null|string $messageTemplate Alternative to Message; specifies a <a href="http://messagetemplates.org/">message template</a> over the event's properties that provides for rendering into a textual description of the event.
-	 * @param null|string $level An implementation-specific level identifier; Seq requires a string value if present. Absence implies "informational".
+	 * @param null|string|Stringable $message A fully-rendered message describing the event.
+	 * @param null|string|Stringable $messageTemplate Alternative to Message; specifies a <a href="http://messagetemplates.org/">message template</a> over the event's properties that provides for rendering into a textual description of the event.
+	 * @param null|string|Stringable $level An implementation-specific level identifier; Seq requires a string value if present. Absence implies "informational".
 	 * @param null|Throwable $exception A language-dependent error representation potentially including backtrace; Seq requires a string value, if present.
 	 * @param null|int $id An implementation specific event id; Seq requires a numeric value, if present.
 	 * @param null|iterable $renderings If <code>mt</code> includes tokens with programming-language-specific formatting, an array of pre-rendered values for each such token. May be omitted; if present, the count of renderings must match the count of formatted tokens exactly.
@@ -29,9 +29,9 @@ readonly class SeqEvent implements JsonSerializable
 	#[Pure]
 	public function __construct(
 		public DateTimeImmutable $timestamp,
-		public ?string $message,
-		public ?string $messageTemplate,
-		public ?string $level,
+		public string|Stringable|null $message,
+		public string|Stringable|null $messageTemplate,
+		public string|Stringable|null $level,
 		public ?Throwable $exception,
 		public ?int $id,
 		public ?iterable $renderings,
@@ -64,15 +64,15 @@ readonly class SeqEvent implements JsonSerializable
 		];
 
 		if ($this->message !== null) {
-			$data["@m"] = $this->message;
+			$data["@m"] = (string)$this->message;
 		}
 
 		if ($this->messageTemplate !== null) {
-			$data["@mt"] = $this->messageTemplate;
+			$data["@mt"] = (string)$this->messageTemplate;
 		}
 
 		if ($this->level !== null) {
-			$data["@l"] = $this->level;
+			$data["@l"] = (string)$this->level;
 		}
 
 		if ($this->exception !== null) {
@@ -103,7 +103,7 @@ readonly class SeqEvent implements JsonSerializable
 		return $data;
 	}
 
-	public static function now(string $message, ?string $level = null, ?Throwable $exception = null, ?array $context = null): self
+	public static function now(string|Stringable|null $message, string|Stringable|null $level = null, ?Throwable $exception = null, ?array $context = null): self
 	{
 		$time = new DateTimeImmutable();
 		$renderings = $context === null ? null : array_map(self::renderValue(...), $context);
@@ -128,33 +128,33 @@ readonly class SeqEvent implements JsonSerializable
 		};
 	}
 
-	public static function verbose(string $message, ?array $context = null): self
+	public static function verbose(string|Stringable|null $message, ?array $context = null): self
 	{
-		return self::now($message, "Verbose", null, $context);
+		return self::now($message, SeqLogLevel::Verbose, null, $context);
 	}
 
-	public static function debug(string $message, ?array $context = null): self
+	public static function debug(string|Stringable|null $message, ?array $context = null): self
 	{
-		return self::now($message, "Debug", null, $context);
+		return self::now($message, SeqLogLevel::Debug, null, $context);
 	}
 
-	public static function information(string $message, ?array $context = null): self
+	public static function info(string|Stringable|null $message, ?array $context = null): self
 	{
-		return self::now($message, "Information", null, $context);
+		return self::now($message, SeqLogLevel::Information, null, $context);
 	}
 
-	public static function warning(string $message, ?array $context = null): self
+	public static function warning(string|Stringable|null $message, ?array $context = null): self
 	{
-		return self::now($message, "Warning", null, $context);
+		return self::now($message, SeqLogLevel::Warning, null, $context);
 	}
 
-	public static function error(string $message, ?Throwable $exception = null, ?array $context = null): self
+	public static function error(string|Stringable|null $message, ?Throwable $exception = null, ?array $context = null): self
 	{
-		return self::now($message, "Error", $exception, $context);
+		return self::now($message, SeqLogLevel::Error, $exception, $context);
 	}
 
-	public static function fatal(string $message, ?Throwable $exception = null, ?array $context = null): self
+	public static function fatal(string|Stringable|null $message, ?Throwable $exception = null, ?array $context = null): self
 	{
-		return self::now($message, "Fatal", $exception, $context);
+		return self::now($message, SeqLogLevel::Fatal, $exception, $context);
 	}
 }

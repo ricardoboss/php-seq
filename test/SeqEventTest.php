@@ -57,12 +57,12 @@ final class SeqEventTest extends TestCase
 
 	public static function staticConstructorsProvider(): iterable
 	{
-		yield ["verbose", "Verbose"];
-		yield ["debug", "Debug"];
-		yield ["information", "Information"];
-		yield ["warning", "Warning"];
-		yield ["error", "Error"];
-		yield ["fatal", "Fatal"];
+		yield ["verbose", SeqLogLevel::Verbose];
+		yield ["debug", SeqLogLevel::Debug];
+		yield ["info", SeqLogLevel::Information];
+		yield ["warning", SeqLogLevel::Warning];
+		yield ["error", SeqLogLevel::Error];
+		yield ["fatal", SeqLogLevel::Fatal];
 	}
 
 	/**

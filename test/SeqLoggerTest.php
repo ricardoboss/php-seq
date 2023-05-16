@@ -16,11 +16,11 @@ use RicardoBoss\PhpSeq\Contract\SeqClient;
  */
 final class SeqLoggerTest extends TestCase
 {
-	public function testLogWithoutBacklog(): void
+	public function testSendWithoutBacklog(): void
 	{
 		$config = new SeqLoggerConfiguration(0);
 		$client = Mockery::mock(SeqClient::class);
-		$event = SeqEvent::information("test");
+		$event = SeqEvent::info("test");
 
 		$client
 			->expects('sendEvents')
@@ -29,20 +29,20 @@ final class SeqLoggerTest extends TestCase
 		;
 
 		$logger = new SeqLogger($config, $client);
-		$logger->log($event);
+		$logger->send($event);
 
 		self::assertCount(1, $events);
 		self::assertSame($event, $events[0]);
 	}
 
-	public function testLogWithFlush(): void
+	public function testSendWithFlush(): void
 	{
 		$config = new SeqLoggerConfiguration();
 		$client = Mockery::mock(SeqClient::class);
-		$event = SeqEvent::information("test");
+		$event = SeqEvent::info("test");
 
 		$logger = new SeqLogger($config, $client);
-		$logger->log($event);
+		$logger->send($event);
 
 		$client
 			->expects('sendEvents')
@@ -60,10 +60,10 @@ final class SeqLoggerTest extends TestCase
 	{
 		$config = new SeqLoggerConfiguration();
 		$client = Mockery::mock(SeqClient::class);
-		$event = SeqEvent::information("test");
+		$event = SeqEvent::info("test");
 
 		$logger = new SeqLogger($config, $client);
-		$logger->log($event);
+		$logger->send($event);
 
 		$client
 			->expects('sendEvents')
@@ -81,10 +81,10 @@ final class SeqLoggerTest extends TestCase
 	{
 		$config = new SeqLoggerConfiguration();
 		$client = Mockery::mock(SeqClient::class);
-		$event = SeqEvent::information("test");
+		$event = SeqEvent::info("test");
 
 		$logger = new SeqLogger($config, $client);
-		$logger->log($event);
+		$logger->send($event);
 
 		$client
 			->expects('sendEvents')
