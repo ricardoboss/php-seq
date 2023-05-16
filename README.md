@@ -111,7 +111,7 @@ Escaping of user properties using `@` is done automatically when encoding the ev
 
 ## Error handling
 
-All exceptions thrown by this library implement the `\RicardBoss\Contract\SeqException` interface.
+All exceptions thrown by this library implement the `\RicardBoss\PhpSeq\Contract\SeqException` interface.
 This makes it easy to catch any exception wrapped by this library.
 
 ## Future Scope
