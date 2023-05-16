@@ -29,7 +29,7 @@ $loggerConfig = new SeqLoggerConfiguration();
 $logger = new SeqLogger($loggerConfig, $seqClient);
 
 // 3. start logging!
-$logger->log(SeqEvent::information("Hello from PHP!"));
+$logger->send(SeqEvent::information("Hello from PHP!"));
 ```
 
 ## Contributing
