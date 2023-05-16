@@ -31,8 +31,14 @@ $logger = new SeqLogger($loggerConfig, $seqClient);
 // 3. start logging!
 $logger->send(SeqEvent::info("Hello from PHP!"));
 // or
-$logger->info("Hello via PSR-3!"); // or $logger->log(\Psr\Log\LogLevel::INFO, "...")
+$logger->info("Hello via PSR-3!"); // or $logger->log(\Psr\Log\LogLevel::INFO, "...");
+
+// (optional) 4. force sending all buffered events
+$logger->flush();
 ```
+
+> **Note**
+> All events get flushed automatically when the loggers `__destruct` method is called (i.e. at latest when the runtime shuts down).
 
 ## Configuration
 
