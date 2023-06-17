@@ -1,0 +1,15 @@
+{
+    "name": "ricardoboss/php-seq-example",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "ricardoboss/php-seq": "*",
+        "guzzlehttp/guzzle": "*"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../"
+        }
+    ]
+}

@@ -12,7 +12,7 @@ use RicardoBoss\PhpSeq\SeqHttpClientConfiguration;
 use RicardoBoss\PhpSeq\SeqLogger;
 use RicardoBoss\PhpSeq\SeqLoggerConfiguration;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require './vendor/autoload.php';
 
 function getPsr18Client(): ClientInterface {
 	return new Client();
@@ -27,7 +27,7 @@ function getPsr17StreamFactory(): StreamFactoryInterface {
 }
 
 // To run this file, you need to have an Seq server running on localhost:5341.
-// You can use the docker-compose.yml file in the project root to start the server.
+// You can use the docker-compose.yml file in the example folder to start one up.
 
 //////////////////////////////////////////////////////////////////////
 
@@ -48,6 +48,9 @@ $logger = new SeqLogger($loggerConfig, $seqClient);
 $logger->send(SeqEvent::info("Hello from PHP!"));
 // or
 $logger->info("Hello via PSR-3!"); // or $logger->log(\Psr\Log\LogLevel::INFO, "...");
+
+// using message templates:
+$logger->info('This is PHP {PhpVersion}', ['PhpVersion' => PHP_VERSION]);
 
 // (optional) 4. force sending all buffered events
 $logger->flush();

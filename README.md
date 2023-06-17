@@ -33,6 +33,9 @@ $logger->send(SeqEvent::info("Hello from PHP!"));
 // or
 $logger->info("Hello via PSR-3!"); // or $logger->log(\Psr\Log\LogLevel::INFO, "...");
 
+// using message templates:
+$logger->info('This is PHP {PhpVersion}', ['PhpVersion' => PHP_VERSION]);
+
 // (optional) 4. force sending all buffered events
 $logger->flush();
 ```
