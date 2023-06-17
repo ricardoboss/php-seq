@@ -4,6 +4,8 @@
 [CLEF format]: https://clef-json.org/
 [message templates]: https://messagetemplates.org/
 [Reified properties]: https://docs.datalust.co/docs/posting-raw-events#reified-properties
+[`example`]: ./example
+[guzzlehttp/guzzle]: https://packagist.org/packages/guzzlehttp/guzzle
 
 # php-seq
 
@@ -46,6 +48,9 @@ $logger->flush();
 > **Note**
 >
 > All events get flushed automatically when the loggers `__destruct` method is called (i.e. at latest when the runtime shuts down).
+
+You can use the example project in the [`example`] folder to try different things out.
+It uses [guzzlehttp/guzzle] as its PSR implementations.
 
 ## Configuration
 
