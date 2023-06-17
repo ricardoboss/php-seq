@@ -105,7 +105,7 @@ echo json_encode($event); // {"@t":"2023-05-16T12:00:01.123456+00:00","@mt":"mes
 ```
 
 Note that you still need to validate the event yourself if you create it that way.
-You can check the requirements from Seq here: [Refined properties](https://docs.datalust.co/docs/posting-raw-events#reified-properties)
+You can check the requirements from Seq here: [Reified properties](https://docs.datalust.co/docs/posting-raw-events#reified-properties)
 
 Escaping of user properties using `@` is done automatically when encoding the event to JSON.
 
