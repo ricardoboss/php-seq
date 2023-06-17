@@ -107,7 +107,7 @@ class SeqLogger implements Contract\SeqLogger
 
 	protected function shouldLog(SeqEvent $event): bool
 	{
-		return $this->compareLevels($this->minimumLogLevel, $event->level) < 0;
+		return self::compareLevels($this->minimumLogLevel, $event->level) < 0;
 	}
 
 	protected function shouldFlush(): bool
