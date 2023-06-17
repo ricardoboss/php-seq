@@ -139,7 +139,7 @@ class SeqHttpClient implements Contract\SeqClient
 			429 => new SeqClientException("Too many requests", 429),
 			500 => new SeqClientException("An internal error prevented the events from being ingested; check Seq's diagnostic log for more information: $problem", 500),
 			503 => new SeqClientException("The Seq server is starting up and can't currently service the request, or, free storage space has fallen below the minimum required threshold; this status code may also be returned by HTTP proxies and other network infrastructure when Seq is unreachable: $problem", 503),
-			default => new SeqClientException("Undocumented status code. Error: " . $seqResponse->error, $response->getStatusCode()),
+			default => new SeqClientException("Undocumented status code. Error: " . $problem, $response->getStatusCode()),
 		};
 	}
 }
