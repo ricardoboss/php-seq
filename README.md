@@ -1,6 +1,9 @@
 [Seq]: https://datalust.co/seq
 [License]: ./LICENSE.md
 [create issue]: https://github.com/ricardoboss/php-seq/issues/new
+[CLEF format]: https://clef-json.org/
+[message templates]: https://messagetemplates.org/
+[Reified properties]: https://docs.datalust.co/docs/posting-raw-events#reified-properties
 
 # php-seq
 
@@ -68,7 +71,7 @@ This makes it possible to create multiple loggers with different contexts/minimu
 
 ### Message templates & context
 
-Seq supports the [message templates](https://messagetemplates.org/) syntax.
+Seq supports the [message templates] syntax.
 You can use it too using the context parameter:
 
 ```php
@@ -85,7 +88,7 @@ $logger->info("Created {username} user", ['username' => $username]);
 
 ### Custom Seq events
 
-Seq uses the [CLEF format](https://clef-json.org/) for HTTP ingestion, which is used by this library.
+Seq uses the [CLEF format] for HTTP ingestion, which is used by this library.
 For your convenience, you can directly access all the properties of the CLEF format using the `SeqEvent` class.
 
 Just create a new instance and send it using the `SeqLogger` or encode it using `json_encode`:
@@ -108,7 +111,7 @@ echo json_encode($event); // {"@t":"2023-05-16T12:00:01.123456+00:00","@mt":"mes
 ```
 
 Note that you still need to validate the event yourself if you create it that way.
-You can check the requirements from Seq here: [Reified properties](https://docs.datalust.co/docs/posting-raw-events#reified-properties)
+You can check the requirements from Seq here: [Reified properties]
 
 Escaping of user properties using `@` is done automatically when encoding the event to JSON.
 
