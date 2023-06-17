@@ -51,6 +51,7 @@ $logger->flush();
 
 The configuration is split up between the actual client, sending the requests and the logger gathering events and forwarding them to the client.
 This makes it possible to create multiple loggers with different contexts/minimum log levels using the same client.
+Also, it enables us to implement new clients for other interfaces in the future (see “Future Scope” below).
 
 ### `SeqHttpClientConfiguration`
 
