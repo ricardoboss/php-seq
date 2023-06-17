@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace RicardoBoss\PhpSeq;
 
+use ArrayIterator;
 use DateTimeImmutable;
+use JsonSerializable;
 use PHPUnit\Framework\TestCase;
+use Stringable;
 use Throwable;
 
 /**
@@ -29,6 +32,7 @@ final class SeqEventTest extends TestCase
 		yield [$now, null, null, null, null, null, ['a' => 'b'], null, ['@t' => $nowString, '@r' => ['a' => 'b']]];
 		yield [$now, null, null, null, null, null, null, [], ['@t' => $nowString]];
 		yield [$now, null, null, null, null, null, null, ['a' => 'b'], ['@t' => $nowString, 'a' => 'b']];
+		yield [$now, null, null, null, null, null, null, ['@at' => 'escaped'], ['@t' => $nowString, '@@at' => 'escaped']];
 	}
 
 	/**
@@ -73,5 +77,32 @@ final class SeqEventTest extends TestCase
 		$event = SeqEvent::{$methodName}("message");
 
 		self::assertSame($expectedLevel, $event->level);
+	}
+
+	public function testRenderedValues(): void
+	{
+		$event = SeqEvent::now("message", context: [
+			'string' => 'data',
+			'integer' => 123,
+			'boolean' => true,
+			'null' => null,
+			'Stringable' => new class implements Stringable { public function __toString(): string { return "data"; } },
+			'array' => ['a' => 'b', 'c' => 'd'],
+			'object' => new class {},
+			'iterable' => new ArrayIterator(['a' => 'b', 'c' => 'd']),
+			'serializable' => new class implements JsonSerializable { public function jsonSerialize(): string { return "serialized"; } },
+		]);
+
+		self::assertSame([
+			'string' => 'data',
+			'integer' => 123,
+			'boolean' => true,
+			'null' => null,
+			'Stringable' => 'data',
+			'array' => '{"a":"b","c":"d"}',
+			'object' => '{}',
+			'iterable' => '{"a":"b","c":"d"}',
+			'serializable' => '"serialized"',
+		], $event->renderings);
 	}
 }

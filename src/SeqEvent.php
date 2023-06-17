@@ -114,7 +114,6 @@ readonly class SeqEvent implements JsonSerializable
 	/**
 	 * @param mixed $value The value to be rendered
 	 * @return string|int|float|bool|null The rendered value
-	 * @throws JsonException
 	 */
 	private static function renderValue(mixed $value): string|int|float|bool|null
 	{
@@ -124,7 +123,7 @@ readonly class SeqEvent implements JsonSerializable
 			is_bool($value),
 			$value === null => $value,
 			$value instanceof Stringable => $value->__toString(),
-			default => json_encode($value, JSON_THROW_ON_ERROR),
+			default => json_encode($value, JSON_PARTIAL_OUTPUT_ON_ERROR),
 		};
 	}
 
