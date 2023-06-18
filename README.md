@@ -10,6 +10,7 @@
 [this brief blog post]: https://nblumhardt.com/2016/02/remote-level-control-in-serilog-using-seq/
 
 [![Unit Tests](https://github.com/ricardoboss/php-seq/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/ricardoboss/php-seq/actions/workflows/unit-tests.yml)
+[![](https://img.shields.io/packagist/v/ricardoboss/php-seq)](https://packagist.org/packages/ricardoboss/php-seq)
 
 # php-seq
 
