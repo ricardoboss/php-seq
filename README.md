@@ -6,6 +6,8 @@
 [Reified properties]: https://docs.datalust.co/docs/posting-raw-events#reified-properties
 [`example`]: ./example
 [guzzlehttp/guzzle]: https://packagist.org/packages/guzzlehttp/guzzle
+[here on Seq's website]: https://docs.datalust.co/docs/using-serilog#dynamic-level-control
+[this brief blog post]: https://nblumhardt.com/2016/02/remote-level-control-in-serilog-using-seq/
 
 [![Unit Tests](https://github.com/ricardoboss/php-seq/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/ricardoboss/php-seq/actions/workflows/unit-tests.yml)
 
@@ -122,6 +124,34 @@ Note that you still need to validate the event yourself if you create it that wa
 You can check the requirements from Seq here: [Reified properties]
 
 Escaping of user properties using `@` is done automatically when encoding the event to JSON.
+
+### Minimum log level
+
+You can specify the minimum log level a logger will buffer and send to Seq using the `$minimumLogLevel` constructor
+parameter of the `SeqLoggerConfiguration` class:
+
+```php
+$config = new SeqLoggerConfiguration(minimumLogLevel: SeqLogLevel::Warning);
+```
+
+This will allow only `Warning` or more critical events to be sent to Seq (like `Error` and `Fatal`).
+
+You can also adjust the minimum log level of the logger at runtime:
+
+```php
+$previousLogLevel = $logger->getMinimumLogLevel();
+
+$logger->setMinimumLogLevel(SeqLogLevel::Information);
+```
+
+### Dynamic Level Control
+
+Seq supports a scheme called "Dynamic Level Control", which allows the client to adjust its minimum log level based on
+what is configured for its API key.
+
+`php-seq` also supports this and will adjust the minimum log level of each logger based on what Seq responds.
+
+You can read up on Dynamic Level Control [here on Seq's website] or in [this brief blog post] by Nicholos Blumhardt.
 
 ## Error handling
 
