@@ -70,13 +70,12 @@ class SeqLogger implements Contract\SeqLogger
 		$this->minimumLogLevel = $this->client->getMinimumLevelAccepted() ?? $this->config->minimumLogLevel;
 	}
 
+	/**
+	 * @throws SeqClientException
+	 */
 	public function __destruct()
 	{
-		try {
-			$this->flush();
-		} catch (SeqException) {
-			// ignore
-		}
+		$this->flush();
 	}
 
 	/**

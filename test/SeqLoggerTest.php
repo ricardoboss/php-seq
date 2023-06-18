@@ -119,10 +119,11 @@ final class SeqLoggerTest extends TestCase
 
 		$logger = new SeqLogger($config, $client);
 		$logger->send($event);
-		$logger->__destruct();
 
-		self::assertCount(1, $events);
-		self::assertSame($event, $events[0]);
+		$this->expectException(SeqClientException::class);
+		$this->expectExceptionMessage("Mock Exception");
+
+		$logger->__destruct();
 	}
 
 	public static function compareLevelsData(): iterable
