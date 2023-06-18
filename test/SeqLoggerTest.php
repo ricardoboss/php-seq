@@ -29,6 +29,13 @@ final class SeqLoggerTest extends TestCase
 			->once()
 		;
 
+		$client
+			->expects('getMinimumLogLevel')
+			->withNoArgs()
+			->twice()
+			->andReturns(null)
+		;
+
 		$logger = new SeqLogger($config, $client);
 		$logger->send($event);
 
@@ -42,8 +49,12 @@ final class SeqLoggerTest extends TestCase
 		$client = Mockery::mock(SeqClient::class);
 		$event = SeqEvent::info("test");
 
-		$logger = new SeqLogger($config, $client);
-		$logger->send($event);
+		$client
+			->expects('getMinimumLogLevel')
+			->withNoArgs()
+			->twice()
+			->andReturns(null)
+		;
 
 		$client
 			->expects('sendEvents')
@@ -51,6 +62,8 @@ final class SeqLoggerTest extends TestCase
 			->once()
 		;
 
+		$logger = new SeqLogger($config, $client);
+		$logger->send($event);
 		$logger->flush();
 
 		self::assertCount(1, $events);
@@ -63,8 +76,12 @@ final class SeqLoggerTest extends TestCase
 		$client = Mockery::mock(SeqClient::class);
 		$event = SeqEvent::info("test");
 
-		$logger = new SeqLogger($config, $client);
-		$logger->send($event);
+		$client
+			->expects('getMinimumLogLevel')
+			->withNoArgs()
+			->twice()
+			->andReturns(null)
+		;
 
 		$client
 			->expects('sendEvents')
@@ -72,6 +89,8 @@ final class SeqLoggerTest extends TestCase
 			->once()
 		;
 
+		$logger = new SeqLogger($config, $client);
+		$logger->send($event);
 		$logger->__destruct();
 
 		self::assertCount(1, $events);
@@ -84,8 +103,12 @@ final class SeqLoggerTest extends TestCase
 		$client = Mockery::mock(SeqClient::class);
 		$event = SeqEvent::info("test");
 
-		$logger = new SeqLogger($config, $client);
-		$logger->send($event);
+		$client
+			->expects('getMinimumLogLevel')
+			->withNoArgs()
+			->once()
+			->andReturns(null)
+		;
 
 		$client
 			->expects('sendEvents')
@@ -94,6 +117,8 @@ final class SeqLoggerTest extends TestCase
 			->andThrows(new SeqClientException("Mock Exception"))
 		;
 
+		$logger = new SeqLogger($config, $client);
+		$logger->send($event);
 		$logger->__destruct();
 
 		self::assertCount(1, $events);
@@ -131,7 +156,13 @@ final class SeqLoggerTest extends TestCase
 
 		$loggerConfiguration = new SeqLoggerConfiguration(globalContext: $globalContext);
 		$clientMock = Mockery::mock(SeqClient::class);
-		$logger = new SeqLogger($loggerConfiguration, $clientMock);
+
+		$clientMock
+			->expects('getMinimumLogLevel')
+			->withNoArgs()
+			->twice()
+			->andReturns(null)
+		;
 
 		$clientMock
 			->expects('sendEvents')
@@ -139,10 +170,13 @@ final class SeqLoggerTest extends TestCase
 			->once()
 		;
 
+		$logger = new SeqLogger($loggerConfiguration, $clientMock);
+
 		$logger->send(
 			SeqEvent::info("test", context: $localContext),
 			SeqEvent::info("test2"),
 		);
+
 		$logger->flush();
 
 		self::assertCount(2, $events);
@@ -150,17 +184,25 @@ final class SeqLoggerTest extends TestCase
 		self::assertSame($globalContext, $events[1]->context);
 	}
 
-	public function testMinimumLogLevel(): void
+	public function testConfiguredMinimumLogLevel(): void
 	{
 		$loggerConfiguration = new SeqLoggerConfiguration(minimumLogLevel: SeqLogLevel::Warning);
 		$clientMock = Mockery::mock(SeqClient::class);
-		$logger = new SeqLogger($loggerConfiguration, $clientMock);
+
+		$clientMock
+			->expects('getMinimumLogLevel')
+			->withNoArgs()
+			->twice()
+			->andReturns(null)
+		;
 
 		$clientMock
 			->expects('sendEvents')
 			->with(Mockery::capture($events))
 			->once()
 		;
+
+		$logger = new SeqLogger($loggerConfiguration, $clientMock);
 
 		$logger->send(
 			SeqEvent::info("test"),
@@ -195,12 +237,83 @@ final class SeqLoggerTest extends TestCase
 		self::assertSame(SeqLogLevel::Warning, $events[3]->level);
 	}
 
+	public function testDynamicLevelControl(): void
+	{
+		$loggerConfiguration = new SeqLoggerConfiguration(minimumLogLevel: null);
+		$clientMock = Mockery::mock(SeqClient::class);
+
+		$clientMock
+			->expects('getMinimumLogLevel')
+			->withNoArgs()
+			->times(5)
+			->andReturns(SeqLogLevel::Warning, SeqLogLevel::Error, SeqLogLevel::Error, null, null)
+		;
+
+		$clientMock
+			->expects('sendEvents')
+			->with(Mockery::capture($events))
+			->once()
+		;
+
+		$logger = new SeqLogger($loggerConfiguration, $clientMock);
+
+		self::assertSame(SeqLogLevel::Warning, $logger->getMinimumLogLevel());
+
+		$logger->send(
+			SeqEvent::info("test"),
+			SeqEvent::info("test2"),
+			SeqEvent::warning("test3"),
+			SeqEvent::fatal("test4"),
+			SeqEvent::debug("test5"),
+		);
+
+		$logger->flush();
+
+		self::assertSame(SeqLogLevel::Error, $logger->getMinimumLogLevel());
+
+		self::assertCount(2, $events);
+		self::assertSame("test3", $events[0]->message);
+		self::assertSame(SeqLogLevel::Warning, $events[0]->level);
+		self::assertSame("test4", $events[1]->message);
+		self::assertSame(SeqLogLevel::Fatal, $events[1]->level);
+
+		$logger->send(
+			SeqEvent::debug("test6"),
+			SeqEvent::warning("test7"),
+			SeqEvent::error("test8"),
+		);
+
+		$logger->flush();
+
+		self::assertSame(SeqLogLevel::Error, $logger->getMinimumLogLevel());
+
+		self::assertCount(3, $events);
+		self::assertSame("test8", $events[2]->message);
+		self::assertSame(SeqLogLevel::Error, $events[2]->level);
+
+		$logger->send(
+			SeqEvent::info("test9"),
+		);
+
+		$logger->flush();
+
+		self::assertNull($logger->getMinimumLogLevel());
+
+		self::assertCount(3, $events);
+	}
+
 	public function testLog(): void
 	{
 		$loggerConfiguration = new SeqLoggerConfiguration();
 		$clientMock = Mockery::mock(SeqClient::class);
-		$logger = new SeqLogger($loggerConfiguration, $clientMock);
 		$exception = new SimpleToStringException("message");
+
+		$clientMock
+			->expects('getMinimumLogLevel')
+			->withNoArgs()
+			->times(3)
+			->andReturns(null)
+		;
 
 		$clientMock
 			->expects('sendEvents')
@@ -208,6 +321,7 @@ final class SeqLoggerTest extends TestCase
 			->twice()
 		;
 
+		$logger = new SeqLogger($loggerConfiguration, $clientMock);
 		$logger->log(LogLevel::INFO, "message");
 		$logger->flush();
 

@@ -35,15 +35,16 @@ final class SeqHttpClientTest extends TestCase
 		$httpClient = Mockery::mock(ClientInterface::class);
 		$requestFactory = Mockery::mock(RequestFactoryInterface::class);
 		$streamFactory = Mockery::mock(StreamFactoryInterface::class);
-		$stream = Mockery::mock(StreamInterface::class);
+		$requestStream = Mockery::mock(StreamInterface::class);
 		$request = Mockery::mock(RequestInterface::class);
 		$response = Mockery::mock(ResponseInterface::class);
+		$responseStream = Mockery::mock(StreamInterface::class);
 
 		$streamFactory
 			->expects('createStream')
 			->with(Mockery::capture($body))
 			->once()
-			->andReturns($stream)
+			->andReturns($requestStream)
 		;
 
 		$requestFactory
@@ -62,7 +63,7 @@ final class SeqHttpClientTest extends TestCase
 
 		$request
 			->expects('withBody')
-			->with($stream)
+			->with($requestStream)
 			->once()
 			->andReturns($request)
 		;
@@ -86,6 +87,20 @@ final class SeqHttpClientTest extends TestCase
 			->withNoArgs()
 			->twice()
 			->andReturns(201)
+		;
+
+		$response
+			->expects('getBody')
+			->withNoArgs()
+			->once()
+			->andReturns($responseStream)
+		;
+
+		$responseStream
+			->expects('getContents')
+			->withNoArgs()
+			->once()
+			->andReturns('{}')
 		;
 
 		$seqClient = new SeqHttpClient($config, $httpClient, $requestFactory, $streamFactory);
