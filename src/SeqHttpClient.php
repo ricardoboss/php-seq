@@ -19,7 +19,7 @@ class SeqHttpClient implements Contract\SeqClient
 
 	private readonly RequestInterface $preparedRequest;
 
-	private ?string $minimumLogLevel = null;
+	private ?string $minimumLevelAccepted = null;
 
 	public function __construct(
 		protected readonly SeqHttpClientConfiguration $config,
@@ -126,8 +126,8 @@ class SeqHttpClient implements Contract\SeqClient
 		}
 
 		if ($response->getStatusCode() === 201) {
-			if ($seqResponse->minimumLevelAccepted !== $this->minimumLogLevel) {
-				$this->minimumLogLevel = $seqResponse->minimumLevelAccepted;
+			if ($seqResponse->minimumLevelAccepted !== $this->minimumLevelAccepted) {
+				$this->minimumLevelAccepted = $seqResponse->minimumLevelAccepted;
 			}
 
 			return;
@@ -147,7 +147,7 @@ class SeqHttpClient implements Contract\SeqClient
 		};
 	}
 
-	public function getMinimumLogLevel(): ?string {
-		return $this->minimumLogLevel;
+	public function getMinimumLevelAccepted(): ?string {
+		return $this->minimumLevelAccepted;
 	}
 }

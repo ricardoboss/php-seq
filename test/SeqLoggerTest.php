@@ -30,7 +30,7 @@ final class SeqLoggerTest extends TestCase
 		;
 
 		$client
-			->expects('getMinimumLogLevel')
+			->expects('getMinimumLevelAccepted')
 			->withNoArgs()
 			->twice()
 			->andReturns(null)
@@ -50,7 +50,7 @@ final class SeqLoggerTest extends TestCase
 		$event = SeqEvent::info("test");
 
 		$client
-			->expects('getMinimumLogLevel')
+			->expects('getMinimumLevelAccepted')
 			->withNoArgs()
 			->twice()
 			->andReturns(null)
@@ -77,7 +77,7 @@ final class SeqLoggerTest extends TestCase
 		$event = SeqEvent::info("test");
 
 		$client
-			->expects('getMinimumLogLevel')
+			->expects('getMinimumLevelAccepted')
 			->withNoArgs()
 			->twice()
 			->andReturns(null)
@@ -104,7 +104,7 @@ final class SeqLoggerTest extends TestCase
 		$event = SeqEvent::info("test");
 
 		$client
-			->expects('getMinimumLogLevel')
+			->expects('getMinimumLevelAccepted')
 			->withNoArgs()
 			->once()
 			->andReturns(null)
@@ -158,7 +158,7 @@ final class SeqLoggerTest extends TestCase
 		$clientMock = Mockery::mock(SeqClient::class);
 
 		$clientMock
-			->expects('getMinimumLogLevel')
+			->expects('getMinimumLevelAccepted')
 			->withNoArgs()
 			->twice()
 			->andReturns(null)
@@ -190,7 +190,7 @@ final class SeqLoggerTest extends TestCase
 		$clientMock = Mockery::mock(SeqClient::class);
 
 		$clientMock
-			->expects('getMinimumLogLevel')
+			->expects('getMinimumLevelAccepted')
 			->withNoArgs()
 			->twice()
 			->andReturns(null)
@@ -243,7 +243,7 @@ final class SeqLoggerTest extends TestCase
 		$clientMock = Mockery::mock(SeqClient::class);
 
 		$clientMock
-			->expects('getMinimumLogLevel')
+			->expects('getMinimumLevelAccepted')
 			->withNoArgs()
 			->times(5)
 			->andReturns(SeqLogLevel::Warning, SeqLogLevel::Error, SeqLogLevel::Error, null, null)
@@ -309,7 +309,7 @@ final class SeqLoggerTest extends TestCase
 		$exception = new SimpleToStringException("message");
 
 		$clientMock
-			->expects('getMinimumLogLevel')
+			->expects('getMinimumLevelAccepted')
 			->withNoArgs()
 			->times(3)
 			->andReturns(null)
