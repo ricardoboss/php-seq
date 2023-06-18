@@ -53,19 +53,21 @@ class SeqLogger implements Contract\SeqLogger
 	 */
 	private array $eventBuffer = [];
 
+	private ?string $minimumLogLevel;
+
 	private readonly ?array $globalContext;
 
 	public function __construct(
 		private readonly SeqLoggerConfiguration $config,
 		private readonly Contract\SeqClient $client,
-		#[ExpectedValues(valuesFromClass: SeqLogLevel::class)]
-		private ?string $minimumLogLevel = null,
 	) {
 		if ($this->config->globalContext !== null) {
 			$this->globalContext = $this->config->globalContext;
 		} else {
 			$this->globalContext = null;
 		}
+
+		$this->minimumLogLevel = $this->config->minimumLogLevel;
 	}
 
 	public function __destruct()
@@ -100,7 +102,7 @@ class SeqLogger implements Contract\SeqLogger
 
 	protected function shouldLog(SeqEvent $event): bool
 	{
-		return self::compareLevels($this->minimumLogLevel, $event->level) <= 0;
+		return self::compareLevels($this->getMinimumLogLevel(), $event->level) <= 0;
 	}
 
 	protected function shouldFlush(): bool
@@ -142,5 +144,13 @@ class SeqLogger implements Contract\SeqLogger
 		$event = SeqEvent::now($message, $strLevel, $exception, $context);
 
 		$this->send($event);
+	}
+
+	public function setMinimumLogLevel(#[ExpectedValues(valuesFromClass: SeqLogLevel::class)] ?string $level): void {
+		$this->minimumLogLevel = $level;
+	}
+
+	public function getMinimumLogLevel(): ?string {
+		return $this->minimumLogLevel;
 	}
 }

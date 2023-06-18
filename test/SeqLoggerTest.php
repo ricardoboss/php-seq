@@ -152,9 +152,9 @@ final class SeqLoggerTest extends TestCase
 
 	public function testMinimumLogLevel(): void
 	{
-		$loggerConfiguration = new SeqLoggerConfiguration();
+		$loggerConfiguration = new SeqLoggerConfiguration(minimumLogLevel: SeqLogLevel::Warning);
 		$clientMock = Mockery::mock(SeqClient::class);
-		$logger = new SeqLogger($loggerConfiguration, $clientMock, SeqLogLevel::Warning);
+		$logger = new SeqLogger($loggerConfiguration, $clientMock);
 
 		$clientMock
 			->expects('sendEvents')
@@ -177,6 +177,22 @@ final class SeqLoggerTest extends TestCase
 		self::assertSame(SeqLogLevel::Warning, $events[0]->level);
 		self::assertSame("test4", $events[1]->message);
 		self::assertSame(SeqLogLevel::Fatal, $events[1]->level);
+
+		$logger->setMinimumLogLevel(SeqLogLevel::Information);
+
+		$logger->send(
+			SeqEvent::debug("test6"),
+			SeqEvent::info("test7"),
+			SeqEvent::warning("test8"),
+		);
+
+		$logger->flush();
+
+		self::assertCount(4, $events);
+		self::assertSame("test7", $events[2]->message);
+		self::assertSame(SeqLogLevel::Information, $events[2]->level);
+		self::assertSame("test8", $events[3]->message);
+		self::assertSame(SeqLogLevel::Warning, $events[3]->level);
 	}
 
 	public function testLog(): void
