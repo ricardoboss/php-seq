@@ -7,6 +7,8 @@
 [`example`]: ./example
 [guzzlehttp/guzzle]: https://packagist.org/packages/guzzlehttp/guzzle
 
+[![Unit Tests](https://github.com/ricardoboss/php-seq/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/ricardoboss/php-seq/actions/workflows/unit-tests.yml)
+
 # php-seq
 
 A PHP library for [Seq] HTTP ingestion.
