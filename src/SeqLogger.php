@@ -67,7 +67,7 @@ class SeqLogger implements Contract\SeqLogger
 			$this->globalContext = null;
 		}
 
-		$this->minimumLogLevel = $this->config->minimumLogLevel;
+		$this->minimumLogLevel = $this->client->getMinimumLogLevel() ?? $this->config->minimumLogLevel;
 	}
 
 	public function __destruct()
@@ -116,6 +116,8 @@ class SeqLogger implements Contract\SeqLogger
 	public function flush(): void
 	{
 		$this->client->sendEvents($this->eventBuffer);
+
+		$this->minimumLogLevel = $this->client->getMinimumLogLevel() ?? $this->config->minimumLogLevel;
 	}
 
 	public function log(

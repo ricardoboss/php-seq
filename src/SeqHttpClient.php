@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RicardoBoss\PhpSeq;
 
-use JetBrains\PhpStorm\Immutable;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -13,13 +12,14 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-#[Immutable]
 class SeqHttpClient implements Contract\SeqClient
 {
 	public const CLEF_CONTENT_TYPE = "application/vnd.serilog.clef";
 	public const SEQ_APIKEY_HEADER_NAME = "X-Seq-ApiKey";
 
 	private readonly RequestInterface $preparedRequest;
+
+	private ?string $minimumLogLevel = null;
 
 	public function __construct(
 		protected readonly SeqHttpClientConfiguration $config,
@@ -117,16 +117,20 @@ class SeqHttpClient implements Contract\SeqClient
 	 */
 	protected function handleResponse(ResponseInterface $response): void
 	{
-		if ($response->getStatusCode() === 201) {
-			return;
-		}
-
 		$json = $response->getBody()->getContents();
 
 		try {
 			$seqResponse = SeqResponse::fromJson($json);
 		} catch (JsonException $e) {
 			throw new SeqClientException("Failed to decode response: {$e->getMessage()}", previous: $e);
+		}
+
+		if ($response->getStatusCode() === 201) {
+			if ($seqResponse->minimumLevelAccepted !== $this->minimumLogLevel) {
+				$this->minimumLogLevel = $seqResponse->minimumLevelAccepted;
+			}
+
+			return;
 		}
 
 		$problem = $seqResponse->error ?? 'no problem details known';
@@ -141,5 +145,9 @@ class SeqHttpClient implements Contract\SeqClient
 			503 => new SeqClientException("The Seq server is starting up and can't currently service the request, or, free storage space has fallen below the minimum required threshold; this status code may also be returned by HTTP proxies and other network infrastructure when Seq is unreachable: $problem", 503),
 			default => new SeqClientException("Undocumented status code. Error: " . $problem, $response->getStatusCode()),
 		};
+	}
+
+	public function getMinimumLogLevel(): ?string {
+		return $this->minimumLogLevel;
 	}
 }

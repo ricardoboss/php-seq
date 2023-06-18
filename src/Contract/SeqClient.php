@@ -13,4 +13,6 @@ interface SeqClient
 	 * @throws SeqClientException
 	 */
 	public function sendEvents(array &$events): void;
+
+	public function getMinimumLogLevel(): ?string;
 }

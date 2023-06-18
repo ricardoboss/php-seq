@@ -7,7 +7,6 @@ use DateTimeImmutable;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
-use JsonException;
 use JsonSerializable;
 use Stringable;
 use Throwable;
