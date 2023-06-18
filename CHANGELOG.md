@@ -1,3 +1,9 @@
+# 1.0.1
+
+- Fixed some edge cases for custom log levels
+- Allow partial JSON encodings for rendered values in context
+- Use `message` key if no context is used
+
 # 1.0.0
 
 - Initial release 🎉
