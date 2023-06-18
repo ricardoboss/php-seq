@@ -118,8 +118,8 @@ class SeqLogger implements Contract\SeqLogger
 		$this->client->sendEvents($this->eventBuffer);
 
 		$newLogLevel = $this->client->getMinimumLogLevel();
-		if ($newLogLevel !== null && $this->getMinimumLogLevel() !== $newLogLevel) {
-			$this->setMinimumLogLevel($this->client->getMinimumLogLevel());
+		if ($this->getMinimumLogLevel() !== $newLogLevel) {
+			$this->setMinimumLogLevel($newLogLevel);
 		}
 	}
 
