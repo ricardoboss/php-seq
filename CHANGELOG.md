@@ -1,3 +1,9 @@
+# 1.1.0
+
+- _minor_: Added `setMinimumLogLevel` and `getMinimumLogLevel` to `SeqLogger` interface
+- _minor_: Removed `$minimumLogLevel` from `SeqLogger` constructor
+- Added `$minimumLogLevel` to `SeqLoggerConfigration`
+
 # 1.0.1
 
 - Fixed some edge cases for custom log levels
