@@ -1,3 +1,7 @@
+# 1.1.1
+
+- Calling `__destruct` or removing all references to an `SeqLogger` instance will no longer catch `SeqException`s
+
 # 1.1.0
 
 - _minor_: Added `setMinimumLogLevel` and `getMinimumLogLevel` to `SeqLogger` interface
