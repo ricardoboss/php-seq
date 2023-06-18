@@ -4,6 +4,7 @@
 - _minor_: Removed `$minimumLogLevel` from `SeqLogger` constructor
 - Added `$minimumLogLevel` to `SeqLoggerConfigration` constructor
 - `SeqHttpClient` is no longer `#[Immutable]`
+- Added `getMinimumLevelAccepted()` to `SeqClient` interface
 - Added ability to update minimum log level via Seq at runtime
 
 # 1.0.1
