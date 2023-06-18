@@ -150,6 +150,96 @@ final class SeqHttpClientTest extends TestCase
 		self::assertEmpty($events);
 	}
 
+	public function testDynamicLevelControl(): void
+	{
+		$endpoint = "http://localhost/endpoint";
+		$token = "token";
+		$events = [SeqEvent::info("test")];
+		$responseBody = '{"MinimumLevelAccepted":"Warning"}';
+
+		$config = new SeqHttpClientConfiguration($endpoint, $token);
+
+		$httpClient = Mockery::mock(ClientInterface::class);
+		$requestFactory = Mockery::mock(RequestFactoryInterface::class);
+		$streamFactory = Mockery::mock(StreamFactoryInterface::class);
+		$request = Mockery::mock(RequestInterface::class);
+		$requestStream = Mockery::mock(StreamInterface::class);
+		$response = Mockery::mock(ResponseInterface::class);
+		$responseStream = Mockery::mock(StreamInterface::class);
+
+		$requestFactory
+			->expects('createRequest')
+			->with('POST', $endpoint)
+			->once()
+			->andReturns($request)
+		;
+
+		$request
+			->expects('withHeader')
+			->with('Content-Type', 'application/vnd.serilog.clef')
+			->once()
+			->andReturns($request)
+		;
+
+		$request
+			->expects('withHeader')
+			->with('X-Seq-ApiKey', $token)
+			->once()
+			->andReturns($request)
+		;
+
+		$streamFactory
+			->expects('createStream')
+			->with(Mockery::capture($body))
+			->once()
+			->andReturns($requestStream)
+		;
+
+		$request
+			->expects('withBody')
+			->with($requestStream)
+			->once()
+			->andReturns($request)
+		;
+
+		$httpClient
+			->expects('sendRequest')
+			->with($request)
+			->once()
+			->andReturns($response)
+		;
+
+		$response
+			->expects('getStatusCode')
+			->withNoArgs()
+			->once()
+			->andReturns(201)
+		;
+
+		$response
+			->expects('getBody')
+			->withNoArgs()
+			->once()
+			->andReturns($responseStream)
+		;
+
+		$responseStream
+			->expects('getContents')
+			->withNoArgs()
+			->once()
+			->andReturns($responseBody)
+		;
+
+		$seqClient = new SeqHttpClient($config, $httpClient, $requestFactory, $streamFactory);
+
+		self::assertNull($seqClient->getMinimumLevelAccepted());
+
+		$seqClient->sendEvents($events);
+
+		self::assertNotEmpty($body);
+		self::assertSame(SeqLogLevel::Warning, $seqClient->getMinimumLevelAccepted());
+	}
+
 	public function testWrapsNetworkException(): void
 	{
 		$endpoint = "http://localhost/endpoint";
