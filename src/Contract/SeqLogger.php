@@ -12,6 +12,7 @@ interface SeqLogger extends LoggerInterface
 {
 	public function setMinimumLogLevel(#[ExpectedValues(valuesFromClass: SeqLogLevel::class)] ?string $level): void;
 
+	#[ExpectedValues(valuesFromClass: SeqLogLevel::class)]
 	public function getMinimumLogLevel(): ?string;
 
 	public function send(SeqEvent $event, SeqEvent ...$events): void;

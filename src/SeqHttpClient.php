@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RicardoBoss\PhpSeq;
 
+use JetBrains\PhpStorm\ExpectedValues;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
@@ -147,6 +148,7 @@ class SeqHttpClient implements Contract\SeqClient
 		};
 	}
 
+	#[ExpectedValues(valuesFromClass: SeqLogLevel::class)]
 	public function getMinimumLevelAccepted(): ?string {
 		return $this->minimumLevelAccepted;
 	}

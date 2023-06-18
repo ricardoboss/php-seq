@@ -155,6 +155,7 @@ class SeqLogger implements Contract\SeqLogger
 		$this->minimumLogLevel = $level;
 	}
 
+	#[ExpectedValues(valuesFromClass: SeqLogLevel::class)]
 	public function getMinimumLogLevel(): ?string {
 		return $this->minimumLogLevel;
 	}
