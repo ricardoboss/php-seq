@@ -30,7 +30,7 @@ class SeqLogger implements Contract\SeqLogger
 		$aLevel = self::levelToInt($a);
 		$bLevel = self::levelToInt($b);
 
-		return $aLevel - $bLevel;
+		return $aLevel <=> $bLevel;
 	}
 
 	public static function levelToInt(string $level): int {
@@ -44,6 +44,7 @@ class SeqLogger implements Contract\SeqLogger
 			SeqLogLevel::Fatal, LogLevel::CRITICAL => 6,
 			LogLevel::ALERT => 7,
 			LogLevel::EMERGENCY => 8,
+			default => -1,
 		};
 	}
 
@@ -81,33 +82,25 @@ class SeqLogger implements Contract\SeqLogger
 	 */
 	public function send(SeqEvent $event, SeqEvent ...$events): void
 	{
-		$this->addToBuffer([$event, ...$events], $this->eventBuffer);
+		/** @var SeqEvent $e */
+		foreach ([$event, ...$events] as $e) {
+			$e = $e->withAddedContext($this->globalContext);
+
+			if (!$this->shouldLog($e)) {
+				continue;
+			}
+
+			$this->eventBuffer[] = $e;
+		}
 
 		if ($this->shouldFlush()) {
 			$this->flush();
 		}
 	}
 
-	/**
-	 * @param list<SeqEvent> $events
-	 * @param list<SeqEvent> $buffer
-	 */
-	protected function addToBuffer(array $events, array &$buffer): void
-	{
-		foreach ($events as $event) {
-			$event = $event->withAddedContext($this->globalContext);
-
-			if (!$this->shouldLog($event)) {
-				continue;
-			}
-
-			$buffer[] = $event;
-		}
-	}
-
 	protected function shouldLog(SeqEvent $event): bool
 	{
-		return self::compareLevels($this->minimumLogLevel, $event->level) < 0;
+		return self::compareLevels($this->minimumLogLevel, $event->level) <= 0;
 	}
 
 	protected function shouldFlush(): bool
@@ -127,7 +120,7 @@ class SeqLogger implements Contract\SeqLogger
 		#[ExpectedValues(valuesFromClass: LogLevel::class)]
 		$level,
 		Stringable|string $message,
-		array $context = [],
+		?array $context = null,
 	): void
 	{
 		assert(is_string($level) || $level instanceof Stringable);
@@ -137,9 +130,13 @@ class SeqLogger implements Contract\SeqLogger
 		// MAYBE: throw exception if level is none of the known log levels, as the specification demands it
 
 		$exception = null;
-		if (array_key_exists('exception', $context) && $context['exception'] instanceof Throwable) {
+		if ($context !== null && array_key_exists('exception', $context) && $context['exception'] instanceof Throwable) {
 			$exception = $context['exception'];
 			unset($context['exception']);
+		}
+
+		if ($context !== null && count($context) === 0) {
+			$context = null;
 		}
 
 		$event = SeqEvent::now($message, $strLevel, $exception, $context);

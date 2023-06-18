@@ -91,7 +91,7 @@ final class SeqHttpClientTest extends TestCase
 		$seqClient = new SeqHttpClient($config, $httpClient, $requestFactory, $streamFactory);
 		$seqClient->sendEvents($events);
 
-		self::assertMatchesRegularExpression("{\"@t\":\"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{6}[+-]\d{2}:\d{2}\",\"@mt\":\"$message\",\"@l\":\"Information\"}\n", $body);
+		self::assertMatchesRegularExpression("{\"@t\":\"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{6}[+-]\d{2}:\d{2}\",\"@m\":\"$message\",\"@l\":\"Information\"}\n", $body);
 		self::assertEmpty($events);
 	}
 

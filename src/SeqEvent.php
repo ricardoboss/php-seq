@@ -108,7 +108,7 @@ readonly class SeqEvent implements JsonSerializable
 		$time = new DateTimeImmutable();
 		$renderings = $context === null ? null : array_map(self::renderValue(...), $context);
 
-		return new self($time, null, $message, $level, $exception, null, $renderings, $context);
+		return new self($time, $renderings === null ? $message : null, $renderings !== null ? $message : null, $level, $exception, null, $renderings, $context);
 	}
 
 	/**
